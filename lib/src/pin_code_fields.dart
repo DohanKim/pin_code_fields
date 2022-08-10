@@ -201,6 +201,11 @@ class PinCodeTextField extends StatefulWidget {
   /// Enable auto unfocus
   final bool autoUnfocus;
 
+  final Widget? prefix;
+
+  // Indexes for separators
+  final int? separator;
+
   PinCodeTextField({
     Key? key,
     required this.appContext,
@@ -257,6 +262,8 @@ class PinCodeTextField extends StatefulWidget {
     this.textGradient,
     this.readOnly = false,
     this.autoUnfocus = true,
+    this.prefix,
+    this.separator,
 
     /// Default for [AutofillGroup]
     this.onAutoFillDisposeAction = AutofillContextAction.commit,
@@ -814,8 +821,12 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
                       }
                     : null,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: widget.mainAxisAlignment,
-                  children: _generateFields(),
+                  children: [
+                    widget.prefix ?? SizedBox.shrink(),
+                    ..._generateFields(),
+                  ],
                 ),
               ),
             ),
@@ -890,6 +901,18 @@ class _PinCodeTextFieldState extends State<PinCodeTextField>
               ),
             )),
       );
+
+      if (widget.separator != null && i == widget.separator! - 1) {
+        result.add(
+          Text(
+            '-',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      }
     }
     return result;
   }
